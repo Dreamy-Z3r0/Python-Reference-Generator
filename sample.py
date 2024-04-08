@@ -14,6 +14,7 @@ def create_database():
 
 def on_submit(entry):
     name = entry.get()
+    entry.delete(0, tk.END)
     conn = sqlite3.connect("names.db")
     c = conn.cursor()
 
