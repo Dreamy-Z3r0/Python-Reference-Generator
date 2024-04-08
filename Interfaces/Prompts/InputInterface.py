@@ -70,6 +70,10 @@ class InputInterface:
         self.buttons = tk.Frame(self.app)
         self.buttons.pack()
 
+        # Clear button
+        self.clear_all = tk.Button(self.buttons, text='Clear', command=self.clear_fields)
+        self.clear_all.pack(side=tk.LEFT)
+
         # Submit button
         self.submit_button = tk.Button(self.buttons, text='Submit', command=self.on_submit)
         self.submit_button.pack(side=tk.LEFT)
@@ -78,6 +82,11 @@ class InputInterface:
         self.exit_button = tk.Button(self.buttons, text="Cancel", command=self.app.destroy)
         self.exit_button.pack(side=tk.LEFT)
     
+
+    def clear_fields(self):
+        for label in list(self.inputFields.keys()):
+            self.inputFields[label][0].delete(0, tk.END)
+
 
     def on_submit(self):
         for label in list(self.inputFields.keys()):
