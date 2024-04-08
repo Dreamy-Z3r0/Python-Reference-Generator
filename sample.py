@@ -71,9 +71,18 @@ def main():
     exit_button = tk.Button(buttons, text="Exit", command=app.destroy)
     exit_button.pack(side=tk.LEFT)
 
-    # Listbox for displaying all available entries
-    listbox = tk.Listbox(app)
-    listbox.pack()
+    # Listbox for displaying all available entries, with a scrollbar
+    listbox_frame = tk.Frame(app)       # Create a frame
+    listbox_frame.pack()
+
+    listbox = tk.Listbox(listbox_frame)           # Create the listbox
+    listbox.pack(side=tk.LEFT)
+
+    scrollbar_listbox = tk.Scrollbar(listbox_frame)       # Verticle scrollbar for listbox
+    scrollbar_listbox.pack(side=tk.RIGHT, fill=tk.BOTH)
+
+    listbox.config(yscrollcommand=scrollbar_listbox.set)    # Integrate scrollbar to listbox
+    scrollbar_listbox.config(command=listbox.yview)
 
     # Main loop
     while True:
