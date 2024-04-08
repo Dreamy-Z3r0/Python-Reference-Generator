@@ -55,17 +55,21 @@ def main():
     entry = tk.Entry(app)
     entry.pack()
 
+    # Button field
+    buttons = tk.Frame(app)
+    buttons.pack()
+
     # Clear text option for entry text box
-    clear_text = tk.Button(app, text="Clear", command=lambda: clear_field(entry))
-    clear_text.pack()
+    clear_text = tk.Button(buttons, text="Clear", command=lambda: clear_field(entry))
+    clear_text.pack(side=tk.LEFT)
 
     # Submit button
-    submit_button = tk.Button(app, text="Submit", command=lambda: on_submit(entry))
-    submit_button.pack()
+    submit_button = tk.Button(buttons, text="Submit", command=lambda: on_submit(entry))
+    submit_button.pack(side=tk.LEFT)
 
     # Exit button
-    exit_button = tk.Button(app, text="Exit", command=app.destroy)
-    exit_button.pack()
+    exit_button = tk.Button(buttons, text="Exit", command=app.destroy)
+    exit_button.pack(side=tk.LEFT)
 
     # Listbox for displaying all available entries
     listbox = tk.Listbox(app)
