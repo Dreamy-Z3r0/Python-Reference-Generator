@@ -4,32 +4,32 @@ import tkinter as tk
 class InputInterface:
     def __init__(self, title="Reference input", geometry=None):
         # Input categories
-        self.inputCategories = [
-            'Type of source',
-            'Author(s)',
-            'Title',
-            'Year',
-            'City',
-            'State/Province',
-            'Country/Region',
-            'Publisher',
-            'Editor(s)',
-            'Volume',
-            'Number of volumes',
-            'Translator(s)',
-            'Short title',
-            'Standard number',
-            'Pages',
-            'Edition',
-            'Comments',
-            'Medium',
-            'Year accessed',
-            'Month accessed',
-            'Day accessed',
-            'URL',
-            'DOI',
-            'ISSN'
-        ]
+        self.inputFields = {
+            'Type of source': None,
+            'Author(s)': None,
+            'Title': None,
+            'Year': None,
+            'City': None,
+            'State/Province': None,
+            'Country/Region': None,
+            'Publisher': None,
+            'Editor(s)': None,
+            'Volume': None,
+            'Number of volumes': None,
+            'Translator(s)': None,
+            'Short title': None,
+            'Standard number': None,
+            'Pages': None,
+            'Edition': None,
+            'Comments': None,
+            'Medium': None,
+            'Year accessed': None,
+            'Month accessed': None,
+            'Day accessed': None,
+            'URL': None,
+            'DOI': None,
+            'ISSN': None
+        }
 
         # Initialise input application with GUI
         self.app = tk.Tk()
@@ -58,14 +58,12 @@ class InputInterface:
         self.inputTable = tk.Frame(self.app)
         self.inputTable.pack()
 
-        self.entries = []
-
-        for index, label in enumerate(self.inputCategories):
+        for index, label in enumerate(list(self.inputFields.keys())):
             fieldLabel = tk.Label(self.inputTable, text=label)
             fieldLabel.grid(row=index, column=0, sticky='E')
 
-            self.entries.append(tk.Entry(self.inputTable))
-            self.entries[-1].grid(row=index, column=1, sticky='W')
+            self.inputFields[label] = [tk.Entry(self.inputTable), None]
+            self.inputFields[label][0].grid(row=index, column=1, sticky='W')
 
 
     def create_button_field(self):
@@ -82,9 +80,12 @@ class InputInterface:
     
 
     def on_submit(self):
-        self.inputData = [entry.get() for entry in self.entries]
-        for index, input in enumerate(self.inputData):
-            print(f'{self.inputCategories[index]}: {input}')
+        for label in list(self.inputFields.keys()):
+            self.inputFields[label][1] = self.inputFields[label][0].get()
+            self.inputFields[label][0].delete(0, tk.END)
+
+            print(f'{label}: {self.inputFields[label][1]}')
+
 
 
 if __name__ == '__main__':
