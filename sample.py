@@ -55,6 +55,10 @@ def main():
     submit_button = tk.Button(app, text="Submit", command=lambda: on_submit(entry))
     submit_button.pack()
 
+    # Exit button
+    exit_button = tk.Button(app, text="Exit", command=app.destroy)
+    exit_button.pack()
+
     # Listbox for displaying all available entries
     listbox = tk.Listbox(app)
     listbox.pack()
