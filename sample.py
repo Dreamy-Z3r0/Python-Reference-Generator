@@ -1,94 +1,104 @@
 import tkinter as tk
+from tkinter import ttk
 import sqlite3
 
-def create_database():
-    conn = sqlite3.connect("names.db")
-    c = conn.cursor()
+class SampleApplication:
+    def __init__(self, title="Python Desktop App", geometry="400x300"):
+        self.databaseName = "names.db"
 
-    c.execute("""CREATE TABLE IF NOT EXISTS names (
+        # Create a database storing inputs (if none exists)
+        SampleApplication.create_database(self.databaseName)
+
+        # Initialise an application with GUI
+        self.app = tk.Tk()
+        self.app.title(title)
+        self.app.geometry(geometry)
+
+        # Add a prompt
+        self.label = tk.Label(self.app, text="Enter your name:")
+        self.label.pack()
+
+        # Entry text box
+        self.entry = tk.Entry(self.app)
+        self.entry.pack()
+
+        # Button field
+        self.buttons = tk.Frame(self.app)
+        self.buttons.pack()
+
+        # Clear text option for entry text box
+        self.clear_text = tk.Button(self.buttons, text="Clear", command=lambda: self.clear_field(self.entry))
+        self.clear_text.pack(side=tk.LEFT)
+
+        # Submit button
+        self.submit_button = tk.Button(self.buttons, text="Submit", command=self.on_submit)
+        self.submit_button.pack(side=tk.LEFT)
+
+        # Exit button
+        self.exit_button = tk.Button(self.buttons, text="Exit", command=self.app.destroy)
+        self.exit_button.pack(side=tk.LEFT)
+
+        # Listbox for displaying all available entries, with a scrollbar
+        self.listbox_frame = tk.Frame(self.app)       # Create a frame
+        self.listbox_frame.pack()
+
+        self.listbox = tk.Listbox(self.listbox_frame)           # Create the listbox
+        self.listbox.pack(side=tk.LEFT)
+
+        self.scrollbar_listbox = tk.Scrollbar(self.listbox_frame)       # Verticle scrollbar for listbox
+        self.scrollbar_listbox.pack(side=tk.RIGHT, fill=tk.BOTH)
+
+        self.listbox.config(yscrollcommand=self.scrollbar_listbox.set)    # Integrate scrollbar to listbox
+        self.scrollbar_listbox.config(command=self.listbox.yview)
+
+        # Main loop
+        self.update_listbox()
+        self.app.mainloop()
+
+    @staticmethod
+    def create_database(databaseName):
+        conn = sqlite3.connect(databaseName)
+        c = conn.cursor()
+
+        c.execute("""CREATE TABLE IF NOT EXISTS names (
                     id INTEGER PRIMARY KEY,
                     name TEXT
-              )""")
-    conn.commit()
-    conn.close()
+                 )""")
+        conn.commit()
+        conn.close()
 
-def clear_field(display_field):
-    display_field.delete(0, tk.END)
+    @classmethod
+    def clear_field(cls, display_field):
+        display_field.delete(0, tk.END)
 
-def on_submit(entry):
-    name = entry.get()
-    clear_field(entry)
-    conn = sqlite3.connect("names.db")
-    c = conn.cursor()
+    def on_submit(self):
+        name = self.entry.get()
+        self.clear_field(self.entry)
+        conn = sqlite3.connect(self.databaseName)
+        c = conn.cursor()
 
-    c.execute("INSERT INTO names (name) VALUES (?)", (name,))
-    conn.commit()
-    conn.close()
+        c.execute("INSERT INTO names (name) VALUES (?)", (name,))
+        conn.commit()
+        conn.close()
 
-def update_listbox(listbox):
-    conn = sqlite3.connect("names.db")
-    c = conn.cursor()
+        self.listbox.insert(tk.END, name)
+        self.listbox.yview(tk.END)
 
-    c.execute("SELECT * FROM names")
-    rows = c.fetchall()
+    def update_listbox(self):
+        conn = sqlite3.connect(self.databaseName)
+        c = conn.cursor()
 
-    clear_field(listbox)
-    for row in rows:
-        listbox.insert(tk.END, row[1])
+        c.execute("SELECT * FROM names")
+        rows = c.fetchall()
 
-    conn.close()
+        self.clear_field(self.listbox)
+        for row in rows:
+            self.listbox.insert(tk.END, row[1])
+
+        conn.close()
 
 def main():
-    # Create a database storing inputs (if none exists)
-    create_database()
-
-    # Initialise an application with GUI
-    app = tk.Tk()
-    app.title("Python Desktop App")
-    app.geometry("400x300")
-
-    # Add app label
-    label = tk.Label(app, text="Enter your name:")
-    label.pack()
-
-    # Entry text box
-    entry = tk.Entry(app)
-    entry.pack()
-
-    # Button field
-    buttons = tk.Frame(app)
-    buttons.pack()
-
-    # Clear text option for entry text box
-    clear_text = tk.Button(buttons, text="Clear", command=lambda: clear_field(entry))
-    clear_text.pack(side=tk.LEFT)
-
-    # Submit button
-    submit_button = tk.Button(buttons, text="Submit", command=lambda: on_submit(entry))
-    submit_button.pack(side=tk.LEFT)
-
-    # Exit button
-    exit_button = tk.Button(buttons, text="Exit", command=app.destroy)
-    exit_button.pack(side=tk.LEFT)
-
-    # Listbox for displaying all available entries, with a scrollbar
-    listbox_frame = tk.Frame(app)       # Create a frame
-    listbox_frame.pack()
-
-    listbox = tk.Listbox(listbox_frame)           # Create the listbox
-    listbox.pack(side=tk.LEFT)
-
-    scrollbar_listbox = tk.Scrollbar(listbox_frame)       # Verticle scrollbar for listbox
-    scrollbar_listbox.pack(side=tk.RIGHT, fill=tk.BOTH)
-
-    listbox.config(yscrollcommand=scrollbar_listbox.set)    # Integrate scrollbar to listbox
-    scrollbar_listbox.config(command=listbox.yview)
-
-    # Main loop
-    while True:
-        update_listbox(listbox)
-        app.update_idletasks()
-        app.update()
+    app = SampleApplication()
 
 if __name__ == '__main__':
     main()
