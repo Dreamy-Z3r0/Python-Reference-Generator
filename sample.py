@@ -12,9 +12,12 @@ def create_database():
     conn.commit()
     conn.close()
 
+def clear_field(display_field):
+    display_field.delete(0, tk.END)
+
 def on_submit(entry):
     name = entry.get()
-    entry.delete(0, tk.END)
+    clear_field(entry)
     conn = sqlite3.connect("names.db")
     c = conn.cursor()
 
@@ -29,7 +32,7 @@ def update_listbox(listbox):
     c.execute("SELECT * FROM names")
     rows = c.fetchall()
 
-    listbox.delete(0, tk.END)
+    clear_field(listbox)
     for row in rows:
         listbox.insert(tk.END, row[1])
 
@@ -51,6 +54,10 @@ def main():
     # Entry text box
     entry = tk.Entry(app)
     entry.pack()
+
+    # Clear text option for entry text box
+    clear_text = tk.Button(app, text="Clear", command=lambda: clear_field(entry))
+    clear_text.pack()
 
     # Submit button
     submit_button = tk.Button(app, text="Submit", command=lambda: on_submit(entry))
