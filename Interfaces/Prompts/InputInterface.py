@@ -62,10 +62,10 @@ class InputInterface:
 
         for index, label in enumerate(self.inputCategories):
             fieldLabel = tk.Label(self.inputTable, text=label)
-            fieldLabel.grid(row=index, column=0)
+            fieldLabel.grid(row=index, column=0, sticky='E')
 
             self.entries.append(tk.Entry(self.inputTable))
-            self.entries[-1].grid(row=index, column=1)
+            self.entries[-1].grid(row=index, column=1, sticky='W')
 
 
     def create_button_field(self):
@@ -77,7 +77,7 @@ class InputInterface:
         self.submit_button.pack(side=tk.LEFT)
 
         # Exit button
-        self.exit_button = tk.Button(self.buttons, text="Exit", command=self.app.destroy)
+        self.exit_button = tk.Button(self.buttons, text="Cancel", command=self.app.destroy)
         self.exit_button.pack(side=tk.LEFT)
     
 
